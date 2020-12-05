@@ -8,6 +8,7 @@ require('./models/user');
 const app = express();
 require("./routes/auth")(app);
 require("./routes/match")(app);
+require("./routes/profile")(app);
 require('./routes/profile_test')(app);
 
 app.get("*", (req, res) => {
