@@ -3,10 +3,7 @@ const express = require("express");
 const app = express();
 
 require("./routes/auth")(app);
-
-app.get("/api/match", async (req, res) => {
-  res.status(200).send({});
-});
+require("./routes/match")(app);
 
 app.get("*", (req, res) => {
   res.send("Home Page");
