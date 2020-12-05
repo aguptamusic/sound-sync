@@ -4,6 +4,8 @@ const app = express();
 
 require("./routes/auth")(app);
 require("./routes/match")(app);
+//require("./routes/preferences")(app);
+require("./routes/profile")(app);
 
 app.get("*", (req, res) => {
   res.send("Home Page");
