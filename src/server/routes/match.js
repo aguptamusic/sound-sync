@@ -6,6 +6,7 @@ module.exports = (app) => {
   app.get("/api/match", async (req, res) => {
     console.log(req.session.id)
     const id = req.session.id;
+    console.log("ID:", id)
 
     const currUser = await User.findOne({ id: id });
     console.log(currUser);
@@ -40,7 +41,7 @@ module.exports = (app) => {
         _id: "$_id",
         name: { "$first": "$display_name" }, 
         number: { $sum: 1 }, 
-        artists: { $push: { id: "$top_shows.id", name: "$top_shows.name" }}
+        hosts: { $push: { id: "$top_shows.id", name: "$top_shows.name" }}
       }},
       { $sort: { number: -1 }}
     ]);
@@ -55,9 +56,9 @@ module.exports = (app) => {
     topArtistMatch = filteredArtistIntersection[0];
     topShowMatch = filteredShowIntersection[0];
 
-    res.status(200).send({
+    res.status(200).send([
       topArtistMatch,
       topShowMatch
-    });
+    ]);
   });
 };
