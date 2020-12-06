@@ -1,19 +1,40 @@
+const mongoose = require('mongoose');
 const axios = require("axios");
-const profile_url = "https://api.spotify.com/v1/me";
+
+const User = mongoose.model('users');
+const PROFILE_ENDPOINT = "https://api.spotify.com/v1/me";
+
 module.exports = (app) => {
   app.get("/api/profile", async (req, res) => {
-    let token = req.query.access_token || null;
-    var profile_res;
+    let accessToken = req.query.access_token || null;
+    var profileRes;
+
     try {
-      profile_res = await axios.get(profile_url, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+      profileRes = await axios.get(PROFILE_ENDPOINT, {
+        headers: { Authorization: "Bearer " + accessToken }
       });
-      console.log(profile_res.data);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
     }
-    res.send(profile_res.data);
+
+    const userData = profileRes.data;
+    const currUser = await User.find({ id: userData.id });
+    if(!currUser) {
+      const newUser = new User({
+        id: userData.id,
+        display_name: userData.display_name,
+        spotify_url: userData.external_urls.spotify,
+        href: userData.href,
+        type: userData.type,
+        uri: userData.uri,
+        images: userData.images,
+        top_artists: [],
+        top_shows: []
+      });
+  
+      await newUser.save();
+      res.send(newUser);
+    }
+    res.send(currUser);
   });
 };
