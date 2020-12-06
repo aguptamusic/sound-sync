@@ -31,6 +31,7 @@ module.exports = (app) => {
     //add to database entry for current user
     const userId = req.query.id;
     const currUser = await User.findOne({ id: userId });
+    if(currUser.size == 0) res.status(400).send("User doesn't exist.")
     artistArray = [];
     showArray = [];
     artistData.forEach((artist) => {
@@ -65,5 +66,7 @@ module.exports = (app) => {
       top_shows: showArray,
     });
     await currUser.save();
-  });
+
+    res.send(currUser);
+  }); 
 };
