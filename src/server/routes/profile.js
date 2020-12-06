@@ -5,7 +5,7 @@ const User = mongoose.model('users');
 const PROFILE_ENDPOINT = "https://api.spotify.com/v1/me";
 
 module.exports = (app) => {
-  app.get("/api/profile", async (req, res) => {
+  app.post("/api/profile", async (req, res) => {
     let accessToken = req.query.access_token || null;
     var profileRes;
 
@@ -33,8 +33,8 @@ module.exports = (app) => {
       });
   
       await newUser.save();
-      res.send(newUser);
+      res.status(201).send(newUser);
     }
-    res.send(currUser);
+    res.status(200).send(currUser);
   });
 };
