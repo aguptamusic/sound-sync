@@ -14,6 +14,11 @@ app.use(
     keys: [config.cookieKey]
   })
 );
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 require("./routes/auth")(app);
 require("./routes/profile")(app);
