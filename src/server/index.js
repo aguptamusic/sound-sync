@@ -9,6 +9,7 @@ const app = express();
 require("./routes/auth")(app);
 require("./routes/match")(app);
 require("./routes/profile")(app);
+require('./routes/preferences')(app);
 
 app.get("*", (req, res) => {
   res.send("Home Page");
