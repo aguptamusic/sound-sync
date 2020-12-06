@@ -1,52 +1,45 @@
-let express = require("express");
-let request = require("request");
-let querystring = require("querystring");
-const { access } = require("fs");
+const axios = require('axios');
+const config = require('../../config/config');
+const request = require("request");
+const profile = require('./profile');
 
 module.exports = (app) => {
-  //after user grants permission, redirects to /callback
-  const redirect_uri = "http://localhost:3000/callback"; //"sound-sync://callback";
-  const client_id = "2a236cf042cc4f93b2a884aa06a27120";
-  const secret_id = "72964233f5f344ac814de3b68ee154dd";
-
   app.get("/api/auth", async (req, res) => {
     var scopes = "user-top-read";
     res.redirect(
       "https://accounts.spotify.com/authorize" +
-        "?response_type=code" +
-        "&client_id=" +
-        client_id +
-        (scopes ? "&scope=" + encodeURIComponent(scopes) : "") +
-        "&redirect_uri=" +
-        encodeURIComponent(redirect_uri) +
-        "&show_dialog=true"
+      "?response_type=code" +
+      "&client_id=" + config.spotifyClientId +
+      (scopes ? "&scope=" + encodeURIComponent(scopes) : "") +
+      "&redirect_uri=" + encodeURIComponent(config.redirectUri) +
+      "&show_dialog=true"
     );
   });
 
-  //use code generated from request to /authorize endpoint
-  app.get("/callback", function (req, res) {
-    let code = req.query.code || null;
-    let authOptions = {
+  app.get("/callback", async (req, res) => {
+    const code = req.query.code || null;
+    const authOptions = {
       url: "https://accounts.spotify.com/api/token",
       form: {
         code: code,
-        redirect_uri,
+        redirect_uri: config.redirectUri,
         grant_type: "authorization_code",
       },
       headers: {
         Authorization:
           "Basic " +
-          Buffer.from(client_id + ":" + secret_id).toString("base64"),
+          Buffer.from(config.spotifyClientId + ":" + config.spotifyClientSecret).toString("base64"),
       },
       json: true,
     };
 
-    //get the access_token
-    request.post(authOptions, function (error, response, body) {
-      var access_token = body.access_token;
-      //window.localStorage.setItem("access_token", access_token);
-      let uri = "http://localhost:3000/api/profile";
-      res.redirect(uri + "?access_token=" + access_token);
+    request.post(authOptions, async (error, response, body) => {
+      const accessToken = body.access_token;
+      const queryParam = "?access_token=" + accessToken;
+      const profileRes = await axios.post("http://localhost:3000/api/profile" + queryParam);
+      
+      //TODO: make requests to get top artists/shows
+      res.send(profileRes.data);
     });
   });
 };
