@@ -47,7 +47,8 @@ module.exports = (app) => {
       const prefRes = await axios.post(
         "http://localhost:4000/api/preferences" + queryParam + idParam
       );
-
+      
+      req.session.id = profileRes.data.id;
       res.send(profileRes.data.id);
     });
   });

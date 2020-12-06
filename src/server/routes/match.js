@@ -4,11 +4,12 @@ const User = mongoose.model('users');
 
 module.exports = (app) => {
   app.get("/api/match", async (req, res) => {
-    const { id } = req.body;
-    // const id = "luketchang";
+    console.log(req.session.id)
+    const id = req.session.id;
 
     const currUser = await User.findOne({ id: id });
-    if(currUser.size == 0) res.status(404).send("User not found.");
+    console.log(currUser);
+    if(currUser == null) res.status(404).send("User not found.");
 
     var artistIds = []
     currUser.top_artists.forEach(artist => {
