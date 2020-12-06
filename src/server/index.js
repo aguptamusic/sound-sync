@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieSession = require('cookie-session');
 const config = require("../config/config");
+const path = require('path');
 
 mongoose.connect(config.mongoURI, { useNewUrlParser: true });
 require("./models/user");
@@ -19,8 +20,9 @@ require("./routes/profile")(app);
 require("./routes/preferences")(app);
 require("./routes/match")(app);
 
+app.use(express.static('../../build'));
 app.get("*", (req, res) => {
-  res.send("Home Page");
+  res.sendFile(path.resolve(__dirname, '../../build/index.html'));
 });
 
 app.listen(4000, () => {
