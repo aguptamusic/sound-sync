@@ -36,8 +36,8 @@ module.exports = (app) => {
     request.post(authOptions, async (error, response, body) => {
       const accessToken = body.access_token;
       const queryParam = "?access_token=" + accessToken;
-      // const profileRes = await axios.post("http://localhost:3000/api/profile" + queryParam);
-      const prefRes = await axios.post("http://localhost:3000/api/preferences" + queryParam);
+      const profileRes = await axios.post("http://localhost:4000/api/profile" + queryParam);
+      // const prefRes = await axios.post("http://localhost:3000/api/preferences" + queryParam);
       
       //TODO: make requests to get top artists/shows
       // res.send(profileRes.data);
