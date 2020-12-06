@@ -8,7 +8,7 @@ function Match() {
       <Button
         animated
         color="green"
-        href="http://localhost:4000/api/matches"
+        href="http://localhost:4000/api/match"
         size="massive"
       >
         <Button.Content visible>Sound Sync!</Button.Content>

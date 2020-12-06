@@ -48,7 +48,7 @@ module.exports = (app) => {
         "http://localhost:4000/api/preferences" + queryParam + idParam
       );
 
-      res.send(profileRes.data.id);
+      res.redirect("/match");
     });
   });
 };
