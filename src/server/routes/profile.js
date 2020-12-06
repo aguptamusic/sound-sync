@@ -6,9 +6,10 @@ const PROFILE_ENDPOINT = "https://api.spotify.com/v1/me";
 
 module.exports = (app) => {
   app.post("/api/profile", async (req, res) => {
-    let accessToken = req.query.access_token || null;
-    var profileRes;
+    const accessToken = req.query.access_token || null;
+    if(accessToken == null) res.status(401).send("Not authorized.");
 
+    var profileRes;
     try {
       profileRes = await axios.get(PROFILE_ENDPOINT, {
         headers: { Authorization: "Bearer " + accessToken }
